@@ -1,10 +1,23 @@
 # Async CSV Logger
+[![PyPI](https://img.shields.io/pypi/v/asynccsv.svg)](https://pypi.python.org/pypi/asynccsv)
+
+This module is a async csv logger that helps you log performance of your algorithm.
+
+
+## Description
 
 This module is intented to be a csv logger which will write to file async-ly.
-This is especially useful for logging performance (e.g. benchmarking some algorithms) at each iteration/time-step.
 
-Internally, it utilise threading to write to async write to file.
+With the hope to have minimum performance impact on benchmarking your algorithm (i.e. I/O blocking to write to disk), this is especially useful for logging performance at each iteration/time-step. Internally, it utilise threading to async write to file.
+
 There are two way to initialise and use the logger.
+
+
+## Install
+
+```
+pip install asynccsv
+```
 
 
 ### 1. Recommended way (with block)
