@@ -1,5 +1,6 @@
 import csv
 import datetime
+import os
 import threading
 import warnings
 from queue import Queue
@@ -35,18 +36,24 @@ class AsyncCSVLogger:
                     csv_writer = csv.writer(f, quoting=csv.QUOTE_ALL)
                     csv_writer.writerow(contents)
 
-    def __init__(self, filename, log_timestamp=False):
+    def __init__(self, filename, log_timestamp=False, exist_ok=False):
         """
         Initialise a logger object that async-ly write given list to csv file.
 
         :param filename: Filename for the csv file to write into
         :param log_timestamp: whether or not include a timestamp while logging
+        :param exist_ok: If set to False, the given filename cannot exists beforehand
         """
+        if not exist_ok and os.path.exists(filename):
+            raise FileExistsError(f"File {filename} already exists! "
+                                  f"Set 'exist_ok=True' to allow it.")
+        # try to create an empty file
+        open(filename, 'a').close()
         self.log_timestamp = log_timestamp
+        self._previous_field_num = None
         self.queue = Queue()
         self.async_writer = AsyncCSVLogger.AsyncWriterThread(self.queue, filename)
         self.async_writer.start()
-        self._previous_field_num = None
 
     def write(self, contents):
         """
